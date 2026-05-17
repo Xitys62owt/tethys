@@ -1,6 +1,6 @@
 lazy val scala212 = "2.12.20"
 lazy val scala213 = "2.13.17"
-lazy val scala3 = "3.3.7"
+lazy val scala3 = "3.8.3"
 
 ThisBuild / scalaVersion := scala3
 ThisBuild / versionScheme := Some("early-semver")
@@ -42,6 +42,13 @@ lazy val commonSettings = Seq(
       email = "goshacodes@gmail.com",
       url = url("https://github.com/goshacodes")
     )
+  ),
+  Test / publishArtifact := false
+)
+
+lazy val ccSettings = Seq(
+  scalacOptions ++= Seq(
+    "-language:experimental.captureChecking"
   ),
   Test / publishArtifact := false
 )
@@ -115,6 +122,7 @@ def addScalaReflect(scalaVersion: String): Seq[ModuleID] =
 lazy val core = project
   .in(modules / "core")
   .settings(crossScalaSettings)
+  .settings(ccSettings)
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
@@ -225,6 +233,7 @@ lazy val jacksonSettings = Seq(
 
 lazy val `jackson-212` = project
   .in(jackson / "jackson-212")
+  .settings(ccSettings)
   .settings(crossScalaSettings)
   .settings(commonSettings)
   .settings(jacksonSettings)
@@ -239,6 +248,7 @@ lazy val `jackson-212` = project
 
 lazy val `jackson-213` = project
   .in(jackson / "jackson-213")
+  .settings(ccSettings)
   .settings(crossScalaSettings)
   .settings(commonSettings)
   .settings(jacksonSettings)
@@ -253,6 +263,7 @@ lazy val `jackson-213` = project
 
 lazy val `jackson-214` = project
   .in(jackson / "jackson-214")
+  .settings(ccSettings)
   .settings(crossScalaSettings)
   .settings(commonSettings)
   .settings(jacksonSettings)
@@ -267,6 +278,7 @@ lazy val `jackson-214` = project
 
 lazy val `jackson-215` = project
   .in(jackson / "jackson-215")
+  .settings(ccSettings)
   .settings(crossScalaSettings)
   .settings(commonSettings)
   .settings(jacksonSettings)
@@ -281,6 +293,7 @@ lazy val `jackson-215` = project
 
 lazy val `jackson-216` = project
   .in(jackson / "jackson-216")
+  .settings(ccSettings)
   .settings(crossScalaSettings)
   .settings(commonSettings)
   .settings(jacksonSettings)
@@ -295,6 +308,7 @@ lazy val `jackson-216` = project
 
 lazy val `jackson-217` = project
   .in(jackson / "jackson-217")
+  .settings(ccSettings)
   .settings(crossScalaSettings)
   .settings(commonSettings)
   .settings(jacksonSettings)
@@ -309,6 +323,7 @@ lazy val `jackson-217` = project
 
 lazy val `jackson-218` = project
   .in(jackson / "jackson-218")
+  .settings(ccSettings)
   .settings(crossScalaSettings)
   .settings(commonSettings)
   .settings(jacksonSettings)
