@@ -107,7 +107,8 @@ lazy val tethys = project
     circe,
     refined,
     enumeratum,
-    cats
+    cats,
+    fs2
   )
 
 lazy val modules = file("modules")
@@ -186,6 +187,20 @@ lazy val cats = project
     name := "tethys-cats",
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-core" % "2.13.0"
+    )
+  )
+  .dependsOn(core)
+
+lazy val fs2 = project
+  .in(modules / "integrations" / "fs2")
+  .settings(ccSettings)
+  .settings(testSettings)
+  .settings(
+    name := "tethys-fs2",
+    libraryDependencies ++= Seq(
+      "co.fs2" %% "fs2-core" % "3.12.2",
+      "co.fs2" %% "fs2-io" % "3.12.2" % Test,
+      "com.fasterxml.jackson.core" % "jackson-core" % "2.18.4"
     )
   )
   .dependsOn(core)
