@@ -107,7 +107,9 @@ private[tethys] object JsonStreamSupport {
     }
     else if (token.isBooleanValue) BooleanValueNode(cursor.boolean())
     else {
-      throw new IllegalStateException(s"Unsupported token node conversion for token: $token")
+      throw new IllegalStateException(
+        s"Unsupported token node conversion for token: $token"
+      )
     }
   }
 }

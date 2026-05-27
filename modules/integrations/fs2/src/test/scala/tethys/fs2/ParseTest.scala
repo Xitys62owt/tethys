@@ -160,9 +160,13 @@ class ParseTest extends AnyFlatSpec with Matchers {
 
   val expectations = Map(
     json.simpleSequential ->
-      Vector(1, 2, 3, 4).map(Foo(_)).map(value => Right(value): Either[String, Foo]),
+      Vector(1, 2, 3, 4)
+        .map(Foo(_))
+        .map(value => Right(value): Either[String, Foo]),
     json.nestedRepetetive ->
-      Vector(1, 2, 3, 4).map(Foo(_)).map(value => Right(value): Either[String, Foo]),
+      Vector(1, 2, 3, 4)
+        .map(Foo(_))
+        .map(value => Right(value): Either[String, Foo]),
     json.nestedRepetetiveIncludingOtherTags ->
       Vector(
         Right(Foo(1)),
@@ -178,7 +182,7 @@ class ParseTest extends AnyFlatSpec with Matchers {
   private def streamBuilder(path: List[String]): Parse.OneDocument =
     path match {
       case head :: tail => tail.foldLeft(Parse.oneDocument(head))(_.inField(_))
-      case Nil => Parse.oneDocument
+      case Nil          => Parse.oneDocument
     }
 
   private def source(jsonString: String): Stream[IO, Byte] =
@@ -186,11 +190,15 @@ class ParseTest extends AnyFlatSpec with Matchers {
 
   private def chunkedSource(chunks: List[String]): Stream[IO, Byte] =
     Stream
-      .emits[IO, Chunk[Byte]](chunks.map(chunk => Chunk.array(chunk.getBytes("UTF-8"))))
+      .emits[IO, Chunk[Byte]](
+        chunks.map(chunk => Chunk.array(chunk.getBytes("UTF-8")))
+      )
       .flatMap(Stream.chunk)
 
   def readAtOnce(path: List[String], jsonString: String) = {
-    source(jsonString).through(streamBuilder(path).everyElementAs[Foo].toFs2Stream[IO])
+    source(jsonString).through(
+      streamBuilder(path).everyElementAs[Foo].toFs2Stream[IO]
+    )
   }
 
   def readByteByByte(path: List[String], jsonString: String) = {
@@ -201,15 +209,14 @@ class ParseTest extends AnyFlatSpec with Matchers {
   }
 
   def readChunked(path: List[String], chunks: List[String]) = {
-    chunkedSource(chunks).through(streamBuilder(path).everyElementAs[Foo].toFs2Stream[IO])
+    chunkedSource(chunks).through(
+      streamBuilder(path).everyElementAs[Foo].toFs2Stream[IO]
+    )
   }
-
-  def normalize[T](result: Vector[Either[ReaderError, T]]) =
-    result.map(_.left.map(_.getMessage))
 
   def assertStreamResult(stream: Stream[IO, Either[ReaderError, Foo]])(
-    expects: Vector[Either[String, Foo]]
-  ) = {
-    normalize(stream.compile.toVector.unsafeRunSync()) shouldBe expects
-  }
+      expects: Vector[Either[String, Foo]]
+  ) = stream.compile.toVector
+    .unsafeRunSync()
+    .map(_.left.map(_.getMessage)) shouldBe expects
 }

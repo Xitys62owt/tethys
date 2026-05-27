@@ -1,7 +1,12 @@
 package tethys.fs2
 
 import com.fasterxml.jackson.core.async.ByteArrayFeeder
-import com.fasterxml.jackson.core.{JsonFactory, JsonParser, JsonToken, JsonTokenId}
+import com.fasterxml.jackson.core.{
+  JsonFactory,
+  JsonParser,
+  JsonToken,
+  JsonTokenId
+}
 import tethys.commons.Token
 import tethys.commons.Token._
 

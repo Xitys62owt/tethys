@@ -2,7 +2,12 @@ package tethys.fs2
 
 import tethys.JsonReader
 import tethys.fs2.Cursor.Step
-import tethys.fs2.JsonStreamSupport.{Collector, decode, isImmediateArrayElementStart, rootError}
+import tethys.fs2.JsonStreamSupport.{
+  Collector,
+  decode,
+  isImmediateArrayElementStart,
+  rootError
+}
 import tethys.readers.ReaderError
 
 private final class DocumentsParser[A](

@@ -10,7 +10,9 @@ import tethys.readers.ReaderError
 object Parse {
   def oneDocument: OneDocument = OneDocument(Nil)
 
-  def oneDocument(fieldName: String): OneDocument = OneDocument(fieldName :: Nil)
+  def oneDocument(fieldName: String): OneDocument = OneDocument(
+    fieldName :: Nil
+  )
 
   final case class OneDocument(path: List[String]) {
     def inField(fieldName: String): OneDocument = copy(path = path :+ fieldName)
@@ -64,7 +66,9 @@ private final class ArrayElementsParser[A](
     cursor.endOfInput()
     val results = drain()
 
-    if (!hasSeenTokens || collector.nonEmpty || targetArrayDepths.nonEmpty || cursor.scopeDepth != 0) {
+    if (
+      !hasSeenTokens || collector.nonEmpty || targetArrayDepths.nonEmpty || cursor.scopeDepth != 0
+    ) {
       Left(rootError("Unexpected end of input"))
     } else {
       Right(results)
@@ -107,9 +111,10 @@ private final class ArrayElementsParser[A](
               }
 
               if (
-                collector.isEmpty && token.isArrayEnd && targetArrayDepths.headOption.contains(
-                  cursor.scopeDepth + 1
-                )
+                collector.isEmpty && token.isArrayEnd && targetArrayDepths.headOption
+                  .contains(
+                    cursor.scopeDepth + 1
+                  )
               ) {
                 targetArrayDepths = targetArrayDepths.tail
               }
