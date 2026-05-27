@@ -196,7 +196,7 @@ lazy val fs2 = project
       "com.fasterxml.jackson.core" % "jackson-core" % "2.18.4"
     )
   )
-  .dependsOn(core)
+  .dependsOn(core, `jackson-218` % Test)
 
 lazy val enumeratum = project
   .in(integrations / "enumeratum")
