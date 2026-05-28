@@ -7,12 +7,32 @@ import cats.MonadError
 import cats.syntax.flatMap._
 import _root_.fs2.{Compiler, Stream}
 import tethys.readers.ReaderError
+import tethys.writers.tokens.TokenWriterProducer
 
 package object fs2 {
   implicit def decoderOps[A](
       jsonReader: JsonReader[A]^
   ): DecoderOps[A]^{jsonReader} =
     new DecoderOps[A](jsonReader)
+
+  implicit class JsonStreamWriterOps[F[_], A](private val stream: Stream[F, A])
+      extends AnyVal {
+    def asJsonArrayByteStream(
+        charset: String = "UTF-8"
+    )(implicit
+        jsonWriter: JsonWriter[A]^,
+        tokenWriterProducer: TokenWriterProducer
+    ): Stream[F, Byte]^{jsonWriter} = {
+      val separator = ",".getBytes(charset)
+
+      Stream.emit('['.toByte) ++
+        stream
+          .map(_.asJson.getBytes(charset))
+          .intersperse(separator)
+          .flatMap(bytes => Stream.emits(bytes)) ++
+        Stream.emit(']'.toByte)
+    }
+  }
 
   final class DecoderOps[A](private val jsonReader: JsonReader[A]^) {
     def decodeFromStream[F[_], G[_]](
